@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <style>
+      section { padding: 0 1em 1em; border: 2px solid lightgrey; margin-bottom: 2em; }
+      .number { background: pink; padding: 1px 1em 1em; margin-bottom: 1em; }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h1>Number Manager</h1>
+      <section>
+        <h2>Buy New Number</h2>
+        <input type="text" v-model="country" placeholder="Country Code" />
+        <button @click="buyNumber">Buy new number</button>
+      </section>
+      <section>
+        <h2>Current Numbers</h2>
+        <div class="number" v-for="number in numbers" :key="number.msisdn">
+          <h3>{{number.msisdn}}</h3>
+          <label for="name">Friendly Name</label>
+          <input type="text" v-model="number.name" @keyup.enter="updateNumber(number)" placeholder="New name">
+          <label for="forward">Forwarding Number</label>
+          <input type="text" v-model="number.voiceCallbackValue" @keyup.enter="updateNumber(number)" placeholder="Update forwarding number">
+          <button @click="deleteNumber(number)">Delete number</button>
+        </div>
+      </section>
+    </div>
+    <script>
+      const app = new Vue({
+        el: '#app',
+        data: {
+          numbers: [],
+          country: ''
+        },
+        created() {
+          this.getNumbers();
+        },
+        methods: {
+          async getNumbers() {
+            const { data } = await axios.get('/numbers')
+            this.numbers = data;
+          },
+          async buyNumber() {
+            try {
+              if(this.country && confirm('Are you sure you would like to buy a number?')) {
+                await axios.post('/numbers', {
+                  country: this.country
+                })
+                alert('Successfully bought new number');
+                this.getNumbers(); 
+              }
+            } catch(err) {
+              alert('Error buying new number', err);
+            }
+          },
+          async updateNumber(number) {
+            try {
+              const { msisdn, country, name, voiceCallbackValue } = number
+              const payload = { country }
+              if(name) payload.name = name
+              if(voiceCallbackValue) payload.forward = voiceCallbackValue
+              await axios.patch(`/numbers/${msisdn}`, payload)
+              alert('Successfully updated number');
+              this.getNumbers(); 
+            } catch(err) {
+              alert('Error updating number', err);
+            }
+          },
+          async deleteNumber(number) {
+            try {
+              if(confirm('Are you sure you would like to delete this number?')) {
+                const { msisdn, country } = number
+                await axios.delete(`/numbers/${msisdn}`, { data: { country } })
+                alert('Successfully deleted number')
+                this.getNumbers()
+              }
+            } catch(err) {
+              alert('Error deleting number', err);
+            }
+          }
+        }
+      })
+    </script>
+  </body>
+</html>
