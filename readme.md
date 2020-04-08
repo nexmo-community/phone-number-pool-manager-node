@@ -24,7 +24,7 @@ npm install
 
 ### Glitch Set Up
 
-1. Click this button to create a new Glitch project based on this application
+1. Click this button to create a new Glitch project based on this application<br/>
 [![Remix on Glitch](https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg)](https://glitch.com/edit/#!/import/github/nexmo-community/phone-number-pool-manager-node)
 2. Populate the `.env` file with your credentials
 3. Click _Show_ at the top of your Glitch editor and open your working application
