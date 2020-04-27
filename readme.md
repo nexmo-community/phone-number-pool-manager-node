@@ -4,6 +4,8 @@
 
 > This application is a manager for Vonage API virtual phone numbers. With it, users can create, edit and cancel numbers.
 
+A full blog post on how this project was built can be found on the [Vonage Developer Blog](https://www.nexmo.com/blog/2020/04/23/manage-a-pool-of-phone-numbers-with-node-js)
+
 ![Vonage](./public/application.png)
 
 ## Set up
